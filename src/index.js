@@ -18,6 +18,8 @@ import "./styles.css";
 
 let myProjects = [];
 
+//This will be the starting project and todos
+//Will be removed when UI is complete
 let newProject = new project(
   "Sample Project",
   "This is a sample project",
@@ -38,10 +40,9 @@ let newTodo2 = new todo(
   "These are sample todo notes."
 );
 
-newProject.addTodo(newTodo1.getTodoInfo());
-newProject.addTodo(newTodo2.getTodoInfo());
-
-myProjects.push(newProject.getProjectInfo());
+newProject.addTodo(newTodo1);
+newProject.addTodo(newTodo2);
+myProjects.push(newProject);
 
 // console.log("Project Info:", newProject.getProjectInfo());
 // console.log("Todo Info:", newTodo.getTodoInfo());
@@ -61,7 +62,6 @@ if (storageAvailable("localStorage")) {
     Object.keys(currentStorage).forEach((key) => {
       if (key.startsWith("projectData_")) {
         const storedProject = readFromStorage("localStorage", key);
-
         if (storedProject) {
           const projectData = JSON.parse(storedProject);
           storedProjects.push(projectData);
@@ -70,6 +70,7 @@ if (storageAvailable("localStorage")) {
     });
   }
 
+  //This is for the initial population of local storage for testing
   myProjects.forEach((newProject) => {
     writeToStorage(
       "localStorage",
@@ -79,14 +80,15 @@ if (storageAvailable("localStorage")) {
   });
 
   if (storedProjects.length > 0) {
-    myProjects = myProjects.concat(storedProjects);
+    const restoredProjects = storedProjects.map((projectData) => {
+      const restoredProject = Object.assign(new project(), projectData);
+      restoredProject.todos.forEach((todoData, index) => {
+        restoredProject.todos[index] = Object.assign(new todo(), todoData);
+      });
+      return restoredProject;
+    });
+    //console.log("Restored Projects:", restoredProjects);
   }
-
-  //   const storedProject = readFromStorage("localStorage", "projectData");
-  //   console.log("Stored Project Data:", JSON.parse(storedProject));
-
-  //   removeFromStorage("localStorage", "projectData");
-  //   console.log("Project data removed from storage.");
 } else {
   console.log(
     "Local storage is not available. Refreshing page will cause data loss."
