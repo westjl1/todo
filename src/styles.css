@@ -24,9 +24,6 @@ img {
 body {
   background-color: black;
   color: lightgray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
 }
 
@@ -41,8 +38,6 @@ body {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 80%;
-  max-width: 600px;
 
   display: flex;
   flex-direction: column;
@@ -54,6 +49,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  width: 80%;
 }
 
 .project {
@@ -61,7 +57,8 @@ body {
   margin-bottom: 10px;
   padding: 15px;
   border-radius: 5px;
-  flex: auto;
+  /* display: flex;
+  align-items: center; */
 }
 
 .todo {
@@ -69,4 +66,52 @@ body {
   margin: 5px 0;
   padding: 10px;
   border-radius: 3px;
+}
+
+dialog {
+  margin-top: 1rem;
+  background-color: #2e2e2e;
+  color: lightgray;
+}
+
+form {
+  margin: 0 auto;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input:focus {
+  background-color: yellow;
+}
+
+label {
+  display: inline-block;
+}
+
+p label {
+  width: 100%;
+}
+
+dialog::backdrop {
+  background-image: linear-gradient(
+    45deg,
+    magenta,
+    rebeccapurple,
+    dodgerblue,
+    green
+  );
+  opacity: 0.75;
+}
+
+input:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+
+input:focus:invalid {
+  box-shadow: none;
+}
+input:valid {
+  box-shadow: 0 0 5px 1px green;
 }

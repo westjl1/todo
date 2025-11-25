@@ -6,6 +6,7 @@ import {
   removeFromStorage,
 } from "./manage-storage.js";
 import { clearDom, writeDom } from "./manage-dom.js";
+import projects from "./manage-projects.js";
 import project from "./project.js";
 import todo from "./todo.js";
 
@@ -16,7 +17,7 @@ import "./styles.css";
 // image.src = odinImage;
 // document.body.appendChild(image);
 
-let myProjects = [];
+let myProjects = new projects();
 
 //This will be the starting project and todos
 //Will be removed when UI is complete
@@ -42,7 +43,7 @@ let newTodo2 = new todo(
 
 newProject.addTodo(newTodo1);
 newProject.addTodo(newTodo2);
-myProjects.push(newProject);
+myProjects.addProject(newProject);
 
 // console.log("Project Info:", newProject.getProjectInfo());
 // console.log("Todo Info:", newTodo.getTodoInfo());
@@ -71,7 +72,7 @@ if (storageAvailable("localStorage")) {
   }
 
   //This is for the initial population of local storage for testing
-  myProjects.forEach((newProject) => {
+  myProjects.getProjects().forEach((newProject) => {
     writeToStorage(
       "localStorage",
       "projectData_" + newProject.id,
@@ -87,7 +88,7 @@ if (storageAvailable("localStorage")) {
       });
       return restoredProject;
     });
-    //console.log("Restored Projects:", restoredProjects);
+    myProjects.setProjects(myProjects.getProjects().concat(restoredProjects));
   }
 } else {
   console.log(
@@ -95,7 +96,7 @@ if (storageAvailable("localStorage")) {
   );
 }
 
-if (myProjects.length > 0) {
+if (myProjects.getLength() > 0) {
   if (clearDom()) {
     writeDom(myProjects);
   } else {
