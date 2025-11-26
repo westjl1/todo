@@ -4,9 +4,9 @@ import {
   writeToStorage,
   readFromStorage,
   removeFromStorage,
+  clearStorage,
 } from "./manage-storage.js";
-import { clearDom, writeDom } from "./manage-dom.js";
-import projects from "./manage-projects.js";
+import { writeDom } from "./manage-dom.js";
 import project from "./project.js";
 import todo from "./todo.js";
 
@@ -17,36 +17,7 @@ import "./styles.css";
 // image.src = odinImage;
 // document.body.appendChild(image);
 
-let myProjects = new projects();
-
-//This will be the starting project and todos
-//Will be removed when UI is complete
-let newProject = new project(
-  "Sample Project",
-  "This is a sample project",
-  "These are sample project notes."
-);
-let newTodo1 = new todo(
-  "Sample Todo 1",
-  "This is a sample todo",
-  "2024-12-31",
-  "high",
-  "These are sample todo notes."
-);
-let newTodo2 = new todo(
-  "Sample Todo 2",
-  "This is a sample todo",
-  "2024-12-31",
-  "high",
-  "These are sample todo notes."
-);
-
-newProject.addTodo(newTodo1);
-newProject.addTodo(newTodo2);
-myProjects.addProject(newProject);
-
-// console.log("Project Info:", newProject.getProjectInfo());
-// console.log("Todo Info:", newTodo.getTodoInfo());
+let myProjects = [];
 
 if (storageAvailable("localStorage")) {
   console.log("Local storage is available.");
@@ -71,14 +42,14 @@ if (storageAvailable("localStorage")) {
     });
   }
 
-  //This is for the initial population of local storage for testing
-  myProjects.getProjects().forEach((newProject) => {
-    writeToStorage(
-      "localStorage",
-      "projectData_" + newProject.id,
-      JSON.stringify(newProject)
-    );
-  });
+  // //This is for the initial population of local storage for testing
+  // myProjects.forEach((newProject) => {
+  //   writeToStorage(
+  //     "localStorage",
+  //     "projectData_" + newProject.id,
+  //     JSON.stringify(newProject)
+  //   );
+  // });
 
   if (storedProjects.length > 0) {
     const restoredProjects = storedProjects.map((projectData) => {
@@ -88,7 +59,7 @@ if (storageAvailable("localStorage")) {
       });
       return restoredProject;
     });
-    myProjects.setProjects(myProjects.getProjects().concat(restoredProjects));
+    myProjects = myProjects.concat(restoredProjects);
   }
 } else {
   console.log(
@@ -96,12 +67,8 @@ if (storageAvailable("localStorage")) {
   );
 }
 
-if (myProjects.getLength() > 0) {
-  if (clearDom()) {
-    writeDom(myProjects);
-  } else {
-    console.error("Failed to clear DOM content.");
-  }
+if (myProjects.length > 0) {
+  writeDom(myProjects);
 } else {
   console.log("No projects to display.");
 }

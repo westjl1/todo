@@ -1,18 +1,27 @@
-import projects from "./manage-projects.js";
+import {
+  storageAvailable,
+  getStorage,
+  writeToStorage,
+  readFromStorage,
+  removeFromStorage,
+  clearStorage,
+} from "./manage-storage.js";
 
-function showDialog(dialogType, editObject = {}) {
+import { writeDom } from "./manage-dom";
+
+function showDialog(editType, editObject = {}, projectsData) {
   const dialog = document.createElement("dialog");
   const editForm = document.createElement("form");
   editForm.method = "dialog";
 
   const formFieldset = document.createElement("fieldset");
   const legend = document.createElement("legend");
-  legend.textContent = `Edit ${dialogType}`;
+  legend.textContent = `Edit ${editType}`;
   formFieldset.appendChild(legend);
 
-  let titleP = document.createElement("p");
-  let descriptionP = document.createElement("p");
-  let notesP = document.createElement("p");
+  const titleP = document.createElement("p");
+  const descriptionP = document.createElement("p");
+  const notesP = document.createElement("p");
 
   const titleLabel = document.createElement("label");
   titleLabel.textContent = "Title:";
@@ -58,28 +67,44 @@ function showDialog(dialogType, editObject = {}) {
   formFieldset.appendChild(submitButton);
   formFieldset.appendChild(cancelButton);
 
-  editForm.appendChild(formFieldset);
+  editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(editForm);
 
+    projectsData.forEach((project) => {
+      if (editType === "project" && project.id === editObject.id) {
+        project.title = formData.get("title");
+        project.description = formData.get("description");
+        project.notes = formData.get("notes");
+      } else if (editType === "todo") {
+        project.todos.forEach((todo) => {
+          if (todo.id === editObject.id) {
+            todo.title = formData.get("title");
+            todo.description = formData.get("description");
+            todo.notes = formData.get("notes");
+          }
+        });
+      }
+      if (storageAvailable("localStorage")) {
+        writeToStorage(
+          "localStorage",
+          "projectData_" + project.id,
+          JSON.stringify(project)
+        );
+      }
+    });
+
+    dialog.close();
+    document.body.removeChild(dialog);
+
+    writeDom(projectsData);
+  });
+
+  editForm.appendChild(formFieldset);
   dialog.appendChild(editForm);
   document.body.appendChild(dialog);
 
   dialog.showModal();
-
-  editForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    console.log(projects);
-    const formData = new FormData(editForm);
-    editObject.title = formData.get("title");
-    editObject.description = formData.get("description");
-    editObject.notes = formData.get("notes");
-    // const title = formData.get("title");
-    // const description = formData.get("description");
-    // const notes = formData.get("notes");
-
-    // console.log("Saved Data:", { title, description, notes });
-    dialog.close();
-    document.body.removeChild(dialog);
-  });
 }
 
 export { showDialog };

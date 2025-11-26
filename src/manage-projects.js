@@ -1,32 +1,22 @@
-class projects {
-  constructor() {
-    this.projectList = [];
-  }
+import project from "./project.js";
+import todo from "./todo.js";
 
-  addProject(project) {
-    this.projectList.push(project);
-  }
+function createNewProject() {
+  const newProject = new project(
+    "New Project",
+    "This is a New project",
+    "These are New project notes."
+  );
+  const newTodo = new todo(
+    "New Todo 1",
+    "This is a New todo",
+    "2024-12-31",
+    "high",
+    "These are New todo notes."
+  );
 
-  removeProject(projectId) {
-    const index = this.projectList.findIndex(
-      (project) => project.id === projectId
-    );
-    if (index !== -1) {
-      this.projectList.splice(index, 1);
-    }
-  }
-
-  setProjects(projects) {
-    this.projectList = projects;
-  }
-
-  getProjects() {
-    return this.projectList;
-  }
-
-  getLength() {
-    return this.projectList.length;
-  }
+  newProject.addTodo(newTodo);
+  return newProject;
 }
 
-export default projects;
+export { createNewProject };

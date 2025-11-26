@@ -33,10 +33,15 @@ function removeFromStorage(type = "localStorage", key) {
   return window[type].removeItem(key);
 }
 
+function clearStorage(type = "localStorage") {
+  return window[type].clear();
+}
+
 export {
   storageAvailable,
   getStorage,
   writeToStorage,
   readFromStorage,
   removeFromStorage,
+  clearStorage,
 };
