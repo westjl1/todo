@@ -108,7 +108,15 @@ function writeDom(projectsData) {
 
       todoDiv.dataset.todoId = todo.id;
       todoDiv.className = "todo";
-      todoDiv.innerHTML = `<h3>${todo.title}</h3><p>${todo.description}</p><p>Due: ${todo.dueDate}</p>`;
+      todoDiv.innerHTML = `
+                           <div class="todo-details">
+                           <h3>${todo.title}</h3>
+                           <p>${todo.description}</p>
+                           <p>Due: ${todo.dueDate}</p>
+                           <p class=${todo.priority}>Priority: ${todo.priority}</p>
+                           <p>${todo.notes}</p>
+                           </div>
+                           `;
 
       const todoEditBtn = document.createElement("button");
       todoEditBtn.type = "button";

@@ -22,6 +22,9 @@ function showDialog(editType, editObject = {}, projectsData) {
   const titleP = document.createElement("p");
   const descriptionP = document.createElement("p");
   const notesP = document.createElement("p");
+  //For todos
+  const dueDateP = document.createElement("p");
+  const priorityP = document.createElement("p");
 
   const titleLabel = document.createElement("label");
   titleLabel.textContent = "Title:";
@@ -40,6 +43,32 @@ function showDialog(editType, editObject = {}, projectsData) {
   descriptionInput.value = editObject.description || "";
   descriptionP.appendChild(descriptionLabel);
   descriptionP.appendChild(descriptionInput);
+
+  const dueDateLabel = document.createElement("label");
+  dueDateLabel.textContent = "Due Date:";
+  const dueDateInput = document.createElement("input");
+  dueDateInput.type = "date";
+  dueDateInput.name = "dueDate";
+  dueDateInput.value = editObject.dueDate || "";
+  dueDateP.appendChild(dueDateLabel);
+  dueDateP.appendChild(dueDateInput);
+
+  const priorityLabel = document.createElement("label");
+  priorityLabel.textContent = "Priority:";
+  const prioritySelect = document.createElement("select");
+  prioritySelect.name = "priority";
+  const priorities = ["low", "medium", "high"];
+  priorities.forEach((level) => {
+    const option = document.createElement("option");
+    option.value = level;
+    option.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+    if (editObject.priority === level) {
+      option.selected = true;
+    }
+    prioritySelect.appendChild(option);
+  });
+  priorityP.appendChild(priorityLabel);
+  priorityP.appendChild(prioritySelect);
 
   const notesLabel = document.createElement("label");
   notesLabel.textContent = "Notes:";
@@ -64,6 +93,12 @@ function showDialog(editType, editObject = {}, projectsData) {
   formFieldset.appendChild(titleP);
   formFieldset.appendChild(descriptionP);
   formFieldset.appendChild(notesP);
+
+  if (editType === "todo") {
+    formFieldset.appendChild(dueDateP);
+    formFieldset.appendChild(priorityP);
+  }
+
   formFieldset.appendChild(submitButton);
   formFieldset.appendChild(cancelButton);
 
@@ -82,6 +117,8 @@ function showDialog(editType, editObject = {}, projectsData) {
             todo.title = formData.get("title");
             todo.description = formData.get("description");
             todo.notes = formData.get("notes");
+            todo.priority = formData.get("priority");
+            todo.dueDate = formData.get("dueDate");
           }
         });
       }
